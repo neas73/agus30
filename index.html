@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#101827">
+<title>Android 30</title>
+<style>
+  :root{
+    --bg:#0d1726; --panel:#162337; --panel2:#1d2d43;
+    --text:#f5f7fb; --muted:#aab7c8; --accent:#9be15d;
+    --accent2:#66d9ef; --danger:#ff6b7a;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; background:#080d16; color:var(--text);
+    font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    display:flex; justify-content:center; align-items:center;
+  }
+  button{font:inherit; border:0; cursor:pointer}
+  .phone{
+    width:min(100vw,430px); height:min(100vh,860px); min-height:620px;
+    position:relative; overflow:hidden; background:#101827;
+    box-shadow:0 20px 70px #0009;
+  }
+  @media(min-width:500px){
+    .phone{border-radius:32px; border:6px solid #253348}
+  }
+
+  /* Update */
+  #update{
+    height:100%; padding:50px 28px 28px; display:flex; flex-direction:column;
+    justify-content:center; background:radial-gradient(circle at 50% 15%,#1d3852,#0d1726 55%);
+  }
+  .android-logo{font-size:62px; text-align:center; margin-bottom:12px}
+  h1{font-size:31px; margin:0 0 5px; text-align:center}
+  .subtitle{text-align:center;color:var(--muted);margin-bottom:35px}
+  .progress-wrap{height:13px;background:#29384d;border-radius:20px;overflow:hidden}
+  #progress{height:100%;width:0;background:var(--accent);border-radius:20px;transition:width .35s}
+  .percent{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin:9px 2px 22px}
+  #status{font-size:15px;min-height:45px;text-align:center}
+  .checks{margin-top:18px;display:grid;gap:8px;color:var(--muted);font-size:13px}
+  .checks div.active{color:var(--text)}
+  .checks span{display:inline-block;width:21px;color:var(--accent)}
+  .start{
+    margin:28px auto 0;padding:13px 30px;border-radius:28px;
+    background:var(--accent);color:#10200d;font-weight:750;
+  }
+
+  /* Home */
+  .screen{height:100%; position:absolute;inset:0}
+  #home{
+    display:none; padding:48px 20px 20px;
+    background:linear-gradient(160deg,#263b66,#7a536f 45%,#ef9b72);
+  }
+  .home-top{display:flex;justify-content:space-between;font-size:13px;font-weight:650}
+  .welcome{margin:34px 5px 25px}
+  .welcome h2{font-size:29px;margin:0 0 4px}
+  .welcome p{margin:0;color:#f1e9ef}
+  .apps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px 12px}
+  .app{background:transparent;color:white;text-align:center}
+  .icon{
+    width:66px;height:66px;margin:auto;border-radius:20px;
+    display:grid;place-items:center;font-size:30px;
+    background:#ffffff22;backdrop-filter:blur(8px);
+    border:1px solid #ffffff28;
+  }
+  .app span{display:block;margin-top:7px;font-size:12px;font-weight:650}
+  .dock{
+    position:absolute;left:18px;right:18px;bottom:18px;padding:13px 20px;
+    border-radius:27px;background:#ffffff26;backdrop-filter:blur(15px);
+    display:flex;justify-content:space-around;font-size:25px;
+  }
+
+  /* Modal */
+  .modal{
+    position:absolute;inset:0;background:#0007;display:none;align-items:flex-end;
+    padding:10px;
+  }
+  .card{
+    width:100%;max-height:82%;overflow:auto;background:#f7f8fa;color:#172033;
+    border-radius:25px 25px 18px 18px;padding:22px;
+    animation:up .22s ease-out;
+  }
+  @keyframes up{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+  .card h2{margin:0 0 6px;font-size:23px}
+  .card .intro{margin:0 0 16px;color:#687386;font-size:14px}
+  .close{float:right;background:#e8ebef;border-radius:50%;width:34px;height:34px;font-size:20px}
+  .memory{border-radius:17px;background:#e9edf2;padding:11px;margin:10px 0}
+  .memory .photo{
+    height:125px;border-radius:12px;display:grid;place-items:center;
+    font-size:40px;background:linear-gradient(135deg,#7388a8,#e39a86);
+  }
+  .memory b{display:block;margin-top:9px}.memory small{color:#687386}
+  .item{padding:14px 0;border-bottom:1px solid #e1e5ea}
+  .item:last-child{border:0}
+  .ok{color:#1b9b59;font-weight:700}.warn{color:#d94d5d;font-weight:650}
+  .battery{height:14px;background:#dfe5e8;border-radius:20px;overflow:hidden;margin:12px 0}
+  .battery div{height:100%;width:100%;background:#65c98a}
+  .final{
+    position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+    padding:30px;background:radial-gradient(circle at 50% 30%,#263e5b,#0b111d);
+    text-align:center;
+  }
+  .final h2{font-size:29px;margin:12px 0 8px}.final p{color:#bdc9d7;line-height:1.55}
+  .heart{font-size:52px}
+  .tiny{font-size:11px;color:#77869a;margin-top:25px}
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <section id="update">
+    <div class="android-logo">🤖</div>
+    <h1>Android 30</h1>
+    <div class="subtitle">Actualización del sistema</div>
+
+    <div class="progress-wrap"><div id="progress"></div></div>
+    <div class="percent"><span>Preparando tu dispositivo...</span><b id="pct">0%</b></div>
+
+    <div id="status">Inicializando Android 30...</div>
+
+    <div class="checks">
+      <div id="c1"><span>○</span> Comprobando compatibilidad...</div>
+      <div id="c2"><span>○</span> Cargando recuerdos...</div>
+      <div id="c3"><span>○</span> Actualizando amistades...</div>
+      <div id="c4"><span>○</span> Instalando nuevas experiencias...</div>
+      <div id="c5"><span>○</span> Preparando los próximos 10 años...</div>
+    </div>
+
+    <button id="start" class="start" style="display:none">INICIAR</button>
+  </section>
+
+  <section id="home" class="screen">
+    <div class="home-top"><span>12:30</span><span>▴ ᯤ  🔋100%</span></div>
+    <div class="welcome">
+      <h2>Android 30</h2>
+      <p>Actualización completada correctamente 🎂</p>
+    </div>
+
+    <div class="apps">
+      <button class="app" onclick="openModal('recuerdos')"><div class="icon">📁</div><span>Recuerdos</span></button>
+      <button class="app" onclick="openModal('amigos')"><div class="icon">❤️</div><span>Amigos</span></button>
+      <button class="app" onclick="openModal('logros')"><div class="icon">🏆</div><span>Logros</span></button>
+      <button class="app" onclick="openModal('galeria')"><div class="icon">📸</div><span>Galería</span></button>
+      <button class="app" onclick="openModal('errores')"><div class="icon">🐛</div><span>Errores</span></button>
+      <button class="app" onclick="openModal('info')"><div class="icon">⚙️</div><span>Dispositivo</span></button>
+    </div>
+
+    <div class="dock"><span>☎️</span><span>💬</span><span>📷</span></div>
+  </section>
+
+  <div id="modal" class="modal" onclick="closeIfOutside(event)">
+    <div class="card" id="card"></div>
+  </div>
+
+  <section id="final" class="final">
+    <div>
+      <div class="heart">❤️</div>
+      <h2>Actualización completada</h2>
+      <p>
+        Gracias por todos los momentos compartidos.<br>
+        Que esta nueva versión venga con muchas más historias,
+        viajes, risas y decisiones cuestionables.
+      </p>
+      <strong>¡Feliz cumpleaños!</strong>
+      <div class="tiny">Android 30 · Versión estable (más o menos)</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const messages = [
+  [3, "Comprobando compatibilidad del dispositivo..."],
+  [9, "Cargando recuerdos..."],
+  [15, "Recuperando momentos inolvidables..."],
+  [22, "Actualizando lista de amigos..."],
+  [29, "Sincronizando amistades..."],
+  [36, "Restaurando fotos que deberían seguir borradas..."],
+  [43, "Analizando decisiones tomadas durante los 20..."],
+  [50, "Buscando señales de adultez..."],
+  [55, "Adultez no encontrada. Continuando instalación..."],
+  [62, "Instalando nuevas experiencias..."],
+  [69, "Haciendo copia de seguridad de los mejores momentos... ❤️"],
+  [76, "Optimizando capacidad para salir hasta tarde..."],
+  [83, "Preparando los próximos 10 años..."],
+  [91, "Aplicando actualización final..."],
+  [97, "Casi listo..."],
+  [100, "¡Actualización completada!"]
+];
+
+let i=0;
+const progress=document.getElementById("progress");
+const pct=document.getElementById("pct");
+const status=document.getElementById("status");
+const start=document.getElementById("start");
+
+function tick(){
+  if(i>=messages.length) return;
+  const [n,msg]=messages[i++];
+  progress.style.width=n+"%"; pct.textContent=n+"%"; status.textContent=msg;
+  if(n>=20) document.getElementById("c1").classList.add("active");
+  if(n>=35) document.getElementById("c2").classList.add("active");
+  if(n>=55) document.getElementById("c3").classList.add("active");
+  if(n>=70) document.getElementById("c4").classList.add("active");
+  if(n>=90) document.getElementById("c5").classList.add("active");
+  if(n===100) start.style.display="block";
+  else setTimeout(tick, 900);
+}
+setTimeout(tick,700);
+
+start.onclick=()=>{
+  document.getElementById("update").style.display="none";
+  document.getElementById("home").style.display="block";
+};
+
+const content={
+  recuerdos: `
+    <button class="close" onclick="closeModal()">×</button>
+    <h2>📁 Recuerdos</h2><p class="intro">Algunos archivos importantes del sistema.</p>
+    <div class="memory"><div class="photo">🌅</div><b>Una aventura inolvidable</b><small>Archivo recuperado correctamente.</small></div>
+    <div class="memory"><div class="photo">🥂</div><b>Una noche que conviene no detallar</b><small>Estado: confidencial.</small></div>
+    <div class="memory"><div class="photo">😂</div><b>Momentos que todavía nos hacen reír</b><small>Se encontraron demasiados.</small></div>
+  `,
+  amigos: `
+    <button class="close" onclick="closeModal()">×</button>
+    <h2>❤️ Amigos</h2><p class="intro">Estado del sistema de amistades.</p>
+    <div class="item"><b>Estado:</b> <span class="ok">● Excelente</span></div>
+    <div class="item"><b>Amigos instalados:</b> muchos</div>
+    <div class="item"><b>Amigos eliminables:</b> 0</div>
+    <div class="item"><b>Personas que tienen material comprometedor:</b> también muchos</div>
+    <p style="text-align:center;margin-top:20px">Gracias por tener gente tan linda en tu vida ❤️</p>
+  `,
+  logros: `
+    <button class="close" onclick="closeModal()">×</button>
+    <h2>🏆 Logros</h2><p class="intro">Funciones desbloqueadas durante el camino.</p>
+    <div class="item">🏆 Sobrevivió a los 20 <span class="ok">✓</span></div>
+    <div class="item">🏆 Tomó decisiones cuestionables <span class="ok">✓</span></div>
+    <div class="item">🏆 Coleccionó buenas historias <span class="ok">✓</span></div>
+    <div class="item">🏆 Encontró gente increíble <span class="ok">✓</span></div>
+    <div class="item">🔓 <b>Android 30</b> — Desbloqueado</div>
+  `,
+  galeria: `
+    <button class="close" onclick="closeModal()">×</button>
+    <h2>📸 Galería</h2><p class="intro">Las fotos reales las ponemos después 😉</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div class="photo" style="height:130px">📷</div><div class="photo" style="height:130px">🥳</div>
+      <div class="photo" style="height:130px">🍻</div><div class="photo" style="height:130px">❤️</div>
+      <div class="photo" style="height:130px">✈️</div><div class="photo" style="height:130px">😂</div>
+    </div>
+  `,
+  errores: `
+    <button class="close" onclick="closeModal()">×</button>
+    <h2>🐛 Errores del sistema</h2><p class="intro">Algunos bugs son parte del sistema.</p>
+    <div class="item warn">⚠️ Error 404: Madurez no encontrada.</div>
+    <div class="item warn">⚠️ Error 302: "Me voy temprano" redirigió a las 5:47 AM.</div>
+    <div class="item warn">⚠️ Advertencia: continúa diciendo "soy joven".</div>
+    <div class="item warn">⚠️ Memoria insuficiente para recordar dónde dejaste las cosas.</div>
+    <div class="item ok">✓ Todos los errores son conocidos y aceptados por el sistema.</div>
+  `,
+  info: `
+    <button class="close" onclick="closeModal()">×</button>
+    <h2>⚙️ Información del dispositivo</h2><p class="intro">Especificaciones de Android 30.</p>
+    <div class="item"><b>Edad:</b> 30 años</div>
+    <div class="item"><b>Batería:</b> 100%<div class="battery"><div></div></div></div>
+    <div class="item"><b>Estado:</b> <span class="ok">Excelente</span></div>
+    <div class="item"><b>Garantía:</b> permanente</div>
+    <div class="item"><b>Próxima actualización:</b> Android 31</div>
+    <div class="item"><b>Versión:</b> 30.0 — estable (más o menos)</div>
+    <button class="start" style="display:block;margin:20px auto 0" onclick="shutdown()">APAGAR</button>
+  `
+};
+
+function openModal(name){
+  document.getElementById("card").innerHTML=content[name];
+  document.getElementById("modal").style.display="flex";
+}
+function closeModal(){document.getElementById("modal").style.display="none"}
+function closeIfOutside(e){if(e.target.id==="modal")closeModal()}
+function shutdown(){
+  closeModal();
+  document.getElementById("home").style.display="none";
+  document.getElementById("final").style.display="flex";
+}
+</script>
+</body>
+</html>
