@@ -11,7 +11,11 @@
     --text:#f5f7fb; --muted:#aab7c8; --accent:#9be15d;
     --accent2:#66d9ef; --danger:#ff6b7a;
   }
-  *{box-sizing:border-box}
+  *{
+    box-sizing:border-box;
+    user-select:none;
+    -webkit-user-select:none;
+  }
   body{
     margin:0; min-height:100vh; background:#080d16; color:var(--text);
     font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -19,7 +23,7 @@
   }
   button{font:inherit; border:0; cursor:pointer}
   .phone{
-    width:min(100vw,430px); height:min(100vh,860px); min-height:620px;
+    width:min(100vw,430px); height:min(100dvh,860px); min-height:620px;
     position:relative; overflow:hidden; background:#101827;
     box-shadow:0 20px 70px #0009;
   }
@@ -27,25 +31,43 @@
     .phone{border-radius:32px; border:6px solid #253348}
   }
 
-  /* Update */
+  /* Update & Profile Avatar */
   #update{
     height:100%; padding:50px 28px 28px; display:flex; flex-direction:column;
     justify-content:center; background:radial-gradient(circle at 50% 15%,#1d3852,#0d1726 55%);
   }
-  .android-logo{font-size:62px; text-align:center; margin-bottom:12px}
-  h1{font-size:31px; margin:0 0 5px; text-align:center}
+  .profile-avatar{
+    width:96px; height:96px; margin:0 auto 16px; border-radius:50%;
+    border:3px solid var(--accent); overflow:hidden;
+    box-shadow:0 4px 20px rgba(155, 225, 93, 0.35);
+  }
+  .profile-avatar img{
+    width:100%; height:100%;
+    object-fit:cover; /* Recorta automáticamente al círculo */
+    object-position:center 30%; /* Centra la cara para evitar recortes manuales */
+    display:block;
+  }
+  h1{font-size:31px; margin:0 0 5px; text-align:center; cursor:pointer}
   .subtitle{text-align:center;color:var(--muted);margin-bottom:35px}
   .progress-wrap{height:13px;background:#29384d;border-radius:20px;overflow:hidden}
-  #progress{height:100%;width:0;background:var(--accent);border-radius:20px;transition:width .35s}
-  .percent{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin:9px 2px 22px}
-  #status{font-size:15px;min-height:45px;text-align:center}
-  .checks{margin-top:18px;display:grid;gap:8px;color:var(--muted);font-size:13px}
-  .checks div.active{color:var(--text)}
-  .checks span{display:inline-block;width:21px;color:var(--accent)}
+  #progress{height:100%;width:0%;background:var(--accent);border-radius:20px;}
+  .percent{display:flex;justify-content:flex-end;color:var(--muted);font-size:13px;margin:9px 2px 22px}
+  #status{font-size:15px;min-height:45px;text-align:center;transition:color 0.3s}
+  
+  /* Checks styling */
+  .checks{margin-top:18px;display:grid;gap:10px;color:var(--muted);font-size:13.5px}
+  .checks div{transition:color 0.4s, transform 0.2s}
+  .checks div.active{color:var(--text); font-weight:600}
+  .checks span{display:inline-block;width:21px;color:var(--muted);transition:color 0.4s}
+  .checks div.active span{color:var(--accent)}
+  
   .start{
     margin:28px auto 0;padding:13px 30px;border-radius:28px;
     background:var(--accent);color:#10200d;font-weight:750;
+    box-shadow: 0 4px 15px rgba(155, 225, 93, 0.4);
+    animation: popIn 0.3s ease-out;
   }
+  @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
   /* Home */
   .screen{height:100%; position:absolute;inset:0}
@@ -57,7 +79,7 @@
   .welcome{margin:34px 5px 25px}
   .welcome h2{font-size:29px;margin:0 0 4px}
   .welcome p{margin:0;color:#f1e9ef}
-  .apps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px 12px}
+  .apps{display:grid;grid-template-columns:repeat(2,1fr);gap:24px 16px;padding:0 20px}
   .app{background:transparent;color:white;text-align:center}
   .icon{
     width:66px;height:66px;margin:auto;border-radius:20px;
@@ -69,13 +91,19 @@
   .dock{
     position:absolute;left:18px;right:18px;bottom:18px;padding:13px 20px;
     border-radius:27px;background:#ffffff26;backdrop-filter:blur(15px);
-    display:flex;justify-content:space-around;font-size:25px;
+    display:flex;justify-content:space-around;align-items:center;font-size:25px;
+  }
+  .dock-btn{
+    background:transparent;color:white;font-size:25px;padding:0;display:grid;place-items:center;
+  }
+  .power-btn{
+    width:42px;height:42px;border-radius:50%;background:transparent;color:#ffffff;font-size:22px;
   }
 
   /* Modal */
   .modal{
     position:absolute;inset:0;background:#0007;display:none;align-items:flex-end;
-    padding:10px;
+    padding:10px; z-index: 10;
   }
   .card{
     width:100%;max-height:82%;overflow:auto;background:#f7f8fa;color:#172033;
@@ -87,16 +115,15 @@
   .card .intro{margin:0 0 16px;color:#687386;font-size:14px}
   .close{float:right;background:#e8ebef;border-radius:50%;width:34px;height:34px;font-size:20px}
   .memory{border-radius:17px;background:#e9edf2;padding:11px;margin:10px 0}
-  .memory .photo{
-    height:125px;border-radius:12px;display:grid;place-items:center;
-    font-size:40px;background:linear-gradient(135deg,#7388a8,#e39a86);
+  .memory img{
+    width:100%; height:180px; object-fit:cover; border-radius:12px; display:block; cursor:pointer;
   }
   .memory b{display:block;margin-top:9px}.memory small{color:#687386}
   .item{padding:14px 0;border-bottom:1px solid #e1e5ea}
   .item:last-child{border:0}
   .ok{color:#1b9b59;font-weight:700}.warn{color:#d94d5d;font-weight:650}
   .battery{height:14px;background:#dfe5e8;border-radius:20px;overflow:hidden;margin:12px 0}
-  .battery div{height:100%;width:100%;background:#65c98a}
+  .battery div{height:100%;width:60%;background:#ffb86c}
   .final{
     position:absolute;inset:0;display:none;align-items:center;justify-content:center;
     padding:30px;background:radial-gradient(circle at 50% 30%,#263e5b,#0b111d);
@@ -105,53 +132,90 @@
   .final h2{font-size:29px;margin:12px 0 8px}.final p{color:#bdc9d7;line-height:1.55}
   .heart{font-size:52px}
   .tiny{font-size:11px;color:#77869a;margin-top:25px}
+
+  /* Visor de Foto Pantalla Completa */
+  .photo-viewer{
+    position:absolute;inset:0;background:rgba(0,0,0,0.92);display:none;
+    justify-content:center;align-items:center;z-index:999;padding:15px;
+    animation: fadeIn 0.2s ease-out;
+  }
+  .photo-viewer img{
+    max-width:100%; max-height:85%; object-fit:contain; border-radius:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.8);
+  }
+  .photo-viewer .close-pv{
+    position:absolute;top:25px;right:25px;background:#ffffff33;color:#fff;
+    border-radius:50%;width:40px;height:40px;font-size:24px;
+    display:grid;place-items:center;cursor:pointer;
+  }
+
+  /* Toast Easter Egg */
+  .toast{
+    position:absolute;bottom:40px;left:50%;transform:translateX(-50%);
+    background:#323232;color:#fff;padding:12px 20px;border-radius:25px;
+    font-size:13px;box-shadow:0 4px 12px #0005;display:none;z-index:99;
+    text-align:center;width:max-content;max-width:85%;
+    animation: fadeIn 0.3s ease-out;
+  }
+  @keyframes fadeIn { from { opacity:0; transform:translate(-50%, 10px); } to { opacity:1; transform:translate(-50%, 0); } }
 </style>
 </head>
 <body>
 <div class="phone">
 
   <section id="update">
-    <div class="android-logo">🤖</div>
-    <h1>Android 30</h1>
+    <div class="profile-avatar">
+      <img src="img/perfil.jpeg" alt="Perfil">
+    </div>
+    <!-- 5 toques rápidos en el título activan el Easter Egg -->
+    <h1 onclick="handleDevClick()">Android 30</h1>
     <div class="subtitle">Actualización del sistema</div>
 
     <div class="progress-wrap"><div id="progress"></div></div>
-    <div class="percent"><span>Preparando tu dispositivo...</span><b id="pct">0%</b></div>
+    <div class="percent"><b id="pct">0%</b></div>
 
-    <div id="status">Inicializando Android 30...</div>
+    <div id="status">Actualizando a Android 30...</div>
 
     <div class="checks">
-      <div id="c1"><span>○</span> Comprobando compatibilidad...</div>
-      <div id="c2"><span>○</span> Cargando recuerdos...</div>
-      <div id="c3"><span>○</span> Actualizando amistades...</div>
-      <div id="c4"><span>○</span> Instalando nuevas experiencias...</div>
-      <div id="c5"><span>○</span> Preparando los próximos 10 años...</div>
+      <div id="c1"><span>○</span> Verificando estado del hardware...</div>
+      <div id="c2"><span>○</span> Procesando archivo de recuerdos...</div>
+      <div id="c3"><span>○</span> Analizando métricas de adultez...</div>
+      <div id="c4"><span>○</span> Forzando instalación de paciencia...</div>
+      <div id="c5"><span>○</span> Creando backup de historias...</div>
     </div>
 
     <button id="start" class="start" style="display:none">INICIAR</button>
   </section>
 
   <section id="home" class="screen">
-    <div class="home-top"><span>12:30</span><span>▴ ᯤ  🔋100%</span></div>
+    <div class="home-top"><span>12:30</span><span>▴ ᯤ  🔋60%</span></div>
     <div class="welcome">
       <h2>Android 30</h2>
       <p>Actualización completada correctamente 🎂</p>
     </div>
 
-    <div class="apps">
+    <div class="apps" id="appsContainer">
       <button class="app" onclick="openModal('recuerdos')"><div class="icon">📁</div><span>Recuerdos</span></button>
-      <button class="app" onclick="openModal('amigos')"><div class="icon">❤️</div><span>Amigos</span></button>
       <button class="app" onclick="openModal('logros')"><div class="icon">🏆</div><span>Logros</span></button>
-      <button class="app" onclick="openModal('galeria')"><div class="icon">📸</div><span>Galería</span></button>
       <button class="app" onclick="openModal('errores')"><div class="icon">🐛</div><span>Errores</span></button>
       <button class="app" onclick="openModal('info')"><div class="icon">⚙️</div><span>Dispositivo</span></button>
     </div>
 
-    <div class="dock"><span>☎️</span><span>💬</span><span>📷</span></div>
+    <div class="dock">
+      <button class="dock-btn">☎️</button>
+      <button class="dock-btn power-btn" onclick="shutdown()" title="Apagar">⏻</button>
+      <button class="dock-btn">📷</button>
+    </div>
   </section>
 
   <div id="modal" class="modal" onclick="closeIfOutside(event)">
     <div class="card" id="card"></div>
+  </div>
+
+  <!-- Contenedor para agrandar las imágenes -->
+  <div id="photoViewer" class="photo-viewer" onclick="closePhoto()">
+    <div class="close-pv">&times;</div>
+    <img id="pvImg" src="" alt="Foto expandida">
   </div>
 
   <section id="final" class="final">
@@ -164,73 +228,117 @@
         viajes, risas y decisiones cuestionables.
       </p>
       <strong>¡Feliz cumpleaños!</strong>
-      <div class="tiny">Android 30 · Versión estable (más o menos)</div>
+      <div class="tiny">Android 30 - Versión estable (más o menos)</div>
     </div>
   </section>
+
+  <div id="toast" class="toast"></div>
 
 </div>
 
 <script>
+const DURATION_SECONDS = 36;
+
 const messages = [
-  [3, "Comprobando compatibilidad del dispositivo..."],
-  [9, "Cargando recuerdos..."],
-  [15, "Recuperando momentos inolvidables..."],
-  [22, "Actualizando lista de amigos..."],
-  [29, "Sincronizando amistades..."],
-  [36, "Restaurando fotos que deberían seguir borradas..."],
-  [43, "Analizando decisiones tomadas durante los 20..."],
-  [50, "Buscando señales de adultez..."],
-  [55, "Adultez no encontrada. Continuando instalación..."],
-  [62, "Instalando nuevas experiencias..."],
-  [69, "Haciendo copia de seguridad de los mejores momentos... ❤️"],
-  [76, "Optimizando capacidad para salir hasta tarde..."],
-  [83, "Preparando los próximos 10 años..."],
-  [91, "Aplicando actualización final..."],
-  [97, "Casi listo..."],
-  [100, "¡Actualización completada!"]
+  [0, "Actualizando a Android 30..."],
+  [8, "Comprobando estado del dispositivo..."],
+  [16, 'Dispositivo "funcionando"'],
+  [24, "Cargando recuerdos..."],
+  [32, "Algunos recuerdos son borrosos"],
+  [40, "Sincronizando fotos..."],
+  [48, "Restaurando fotos borradas que deberian seguir borradas"],
+  [55, "Buscando señales de adultez..."], 
+  [66, "El proceso esta tardando demasiado"],
+  [74, "Adultez no encontrada. Continuando instalación..."],
+  [81, "Instalando paciencia (esto puede demorar)..."],
+  [87, "Optimizando capacidad para organizar juntadas..."],
+  [93, "Haciendo copia de seguridad de las mejores historias..."],
+  [100, "¡Actualización a Android 30 completada!"]
 ];
 
-let i=0;
-const progress=document.getElementById("progress");
-const pct=document.getElementById("pct");
-const status=document.getElementById("status");
-const start=document.getElementById("start");
+const progress = document.getElementById("progress");
+const pct = document.getElementById("pct");
+const status = document.getElementById("status");
+const start = document.getElementById("start");
 
-function tick(){
-  if(i>=messages.length) return;
-  const [n,msg]=messages[i++];
-  progress.style.width=n+"%"; pct.textContent=n+"%"; status.textContent=msg;
-  if(n>=20) document.getElementById("c1").classList.add("active");
-  if(n>=35) document.getElementById("c2").classList.add("active");
-  if(n>=55) document.getElementById("c3").classList.add("active");
-  if(n>=70) document.getElementById("c4").classList.add("active");
-  if(n>=90) document.getElementById("c5").classList.add("active");
-  if(n===100) start.style.display="block";
-  else setTimeout(tick, 900);
+function checkItem(id) {
+  const el = document.getElementById(id);
+  if (el && !el.classList.contains("active")) {
+    el.classList.add("active");
+    const iconSpan = el.querySelector("span");
+    if (iconSpan) iconSpan.textContent = "✓";
+  }
 }
-setTimeout(tick,700);
 
-start.onclick=()=>{
-  document.getElementById("update").style.display="none";
-  document.getElementById("home").style.display="block";
+let startTime = null;
+let currentMsgIdx = 0;
+
+function animateProgress(timestamp) {
+  if (!startTime) startTime = timestamp;
+  const elapsed = (timestamp - startTime) / 1000;
+  
+  let percentage = (elapsed / DURATION_SECONDS) * 100;
+
+  if (percentage > 100) percentage = 100;
+
+  progress.style.width = percentage + "%";
+  pct.textContent = Math.floor(percentage) + "%";
+
+  while (currentMsgIdx < messages.length - 1 && percentage >= messages[currentMsgIdx + 1][0]) {
+    currentMsgIdx++;
+    status.textContent = messages[currentMsgIdx][1];
+  }
+
+  if (percentage >= 16) checkItem("c1");
+  if (percentage >= 40) checkItem("c2");
+  if (percentage >= 74) checkItem("c3");
+  if (percentage >= 81) checkItem("c4");
+  if (percentage >= 93) checkItem("c5");
+
+  if (percentage < 100) {
+    requestAnimationFrame(animateProgress);
+  } else {
+    status.textContent = messages[messages.length - 1][1];
+    start.style.display = "block";
+  }
+}
+
+requestAnimationFrame(animateProgress);
+
+start.onclick = () => {
+  document.getElementById("update").style.display = "none";
+  document.getElementById("home").style.display = "block";
 };
 
-const content={
+const content = {
   recuerdos: `
     <button class="close" onclick="closeModal()">×</button>
     <h2>📁 Recuerdos</h2><p class="intro">Algunos archivos importantes del sistema.</p>
-    <div class="memory"><div class="photo">🌅</div><b>Una aventura inolvidable</b><small>Archivo recuperado correctamente.</small></div>
-    <div class="memory"><div class="photo">🥂</div><b>Una noche que conviene no detallar</b><small>Estado: confidencial.</small></div>
-    <div class="memory"><div class="photo">😂</div><b>Momentos que todavía nos hacen reír</b><small>Se encontraron demasiados.</small></div>
-  `,
-  amigos: `
-    <button class="close" onclick="closeModal()">×</button>
-    <h2>❤️ Amigos</h2><p class="intro">Estado del sistema de amistades.</p>
-    <div class="item"><b>Estado:</b> <span class="ok">● Excelente</span></div>
-    <div class="item"><b>Amigos instalados:</b> muchos</div>
-    <div class="item"><b>Amigos eliminables:</b> 0</div>
-    <div class="item"><b>Personas que tienen material comprometedor:</b> también muchos</div>
-    <p style="text-align:center;margin-top:20px">Gracias por tener gente tan linda en tu vida ❤️</p>
+    
+    <div class="memory">
+      <img src="img/pic1.jpeg" alt="Montaña" onclick="zoomPhoto(this.src)">
+      <b>Escape a la montaña</b><small>Mendoza / Cordillera — Archivo procesado correctamente.</small>
+    </div>
+    
+    <div class="memory">
+      <img src="img/pic2.jpeg" alt="Asado" onclick="zoomPhoto(this.src)">
+      <b>Fernet & Asado en la mesa</b><small>Estado: sesión de sobremesa extendida.</small>
+    </div>
+
+    <div class="memory">
+      <img src="img/pic3.jpeg" alt="Río" onclick="zoomPhoto(this.src)">
+      <b>Tarde de río con vaso viajero</b><small>Métricas: hidratación y naturaleza al 100%.</small>
+    </div>
+
+    <div class="memory">
+      <img src="img/pic4.jpeg" alt="Cena" onclick="zoomPhoto(this.src)">
+      <b>Reunión en el bar</b><small>Sincronización de grupo en curso...</small>
+    </div>
+
+    <div class="memory">
+      <img src="img/pic5.jpeg" alt="Salida nocturna" onclick="zoomPhoto(this.src)">
+      <b>Noche de helado y risas</b><small>Registro de momentos no borrables.</small>
+    </div>
   `,
   logros: `
     <button class="close" onclick="closeModal()">×</button>
@@ -241,34 +349,33 @@ const content={
     <div class="item">🏆 Encontró gente increíble <span class="ok">✓</span></div>
     <div class="item">🔓 <b>Android 30</b> — Desbloqueado</div>
   `,
-  galeria: `
-    <button class="close" onclick="closeModal()">×</button>
-    <h2>📸 Galería</h2><p class="intro">Las fotos reales las ponemos después 😉</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <div class="photo" style="height:130px">📷</div><div class="photo" style="height:130px">🥳</div>
-      <div class="photo" style="height:130px">🍻</div><div class="photo" style="height:130px">❤️</div>
-      <div class="photo" style="height:130px">✈️</div><div class="photo" style="height:130px">😂</div>
-    </div>
-  `,
   errores: `
     <button class="close" onclick="closeModal()">×</button>
     <h2>🐛 Errores del sistema</h2><p class="intro">Algunos bugs son parte del sistema.</p>
-    <div class="item warn">⚠️ Error 404: Madurez no encontrada.</div>
-    <div class="item warn">⚠️ Error 302: "Me voy temprano" redirigió a las 5:47 AM.</div>
+    <div class="item warn">⚠️ Error 404: Puntualidad no encontrada.</div>
+    <div class="item warn">⚠️ Alergias nuevas encontradas.</div>
     <div class="item warn">⚠️ Advertencia: continúa diciendo "soy joven".</div>
-    <div class="item warn">⚠️ Memoria insuficiente para recordar dónde dejaste las cosas.</div>
+    <div class="item warn">⚠️ Memoria insuficiente para recordar dónde están las cosas.</div>
     <div class="item ok">✓ Todos los errores son conocidos y aceptados por el sistema.</div>
   `,
   info: `
     <button class="close" onclick="closeModal()">×</button>
     <h2>⚙️ Información del dispositivo</h2><p class="intro">Especificaciones de Android 30.</p>
-    <div class="item"><b>Edad:</b> 30 años</div>
-    <div class="item"><b>Batería:</b> 100%<div class="battery"><div></div></div></div>
-    <div class="item"><b>Estado:</b> <span class="ok">Excelente</span></div>
-    <div class="item"><b>Garantía:</b> permanente</div>
-    <div class="item"><b>Próxima actualización:</b> Android 31</div>
-    <div class="item"><b>Versión:</b> 30.0 — estable (más o menos)</div>
-    <button class="start" style="display:block;margin:20px auto 0" onclick="shutdown()">APAGAR</button>
+    <div class="item"><b>Batería:</b> 60%<div class="battery"><div></div></div></div>
+    <div class="item"><b>Estado:</b> <span class="warn">Dudoso</span></div>
+    <div class="item"><b>Ganas de asado:</b> siempre</div>
+    <div class="item"><b>Próxima actualización:</b> 20/09/2027</div>
+    <div class="item" onclick="handleDevClick()" style="cursor:pointer"><b>Versión:</b> 30 - estable (más o menos)</div>
+  `,
+  secreto: `
+    <button class="close" onclick="closeModal()">×</button>
+    <h2>🕵️‍♂️ Modo Desarrollador</h2><p class="intro">Estadísticas de hardware acumuladas en 30 años.</p>
+    <div class="item"><b>💓 Latidos acumulados:</b> ~1.18 mil millones</div>
+    <div class="item"><b>😴 Horas de sueño:</b> ~87,600 hs (casi 10 años durmiendo)</div>
+    <div class="item"><b>💅 Crecimiento de uñas:</b> ~3.2 metros generados</div>
+    <div class="item"><b>💇 Crecimiento de pelo:</b> ~4.5 metros producidos</div>
+    <div class="item"><b>💩 Residuos procesados:</b> ~5,500 kg generados en total</div>
+    <div class="item ok"><b>Easter Egg:</b> ¡Encontraste la sala secreta del sistema! 🥳</div>
   `
 };
 
@@ -282,6 +389,47 @@ function shutdown(){
   closeModal();
   document.getElementById("home").style.display="none";
   document.getElementById("final").style.display="flex";
+}
+
+/* Visor de imágenes */
+function zoomPhoto(src){
+  document.getElementById("pvImg").src = src;
+  document.getElementById("photoViewer").style.display = "flex";
+}
+function closePhoto(){
+  document.getElementById("photoViewer").style.display = "none";
+}
+
+/* Lógica del Easter Egg */
+let devClicks = 0;
+let devTimer = null;
+let devUnlocked = false;
+
+function handleDevClick(){
+  if(devUnlocked) return;
+  devClicks++;
+  clearTimeout(devTimer);
+  devTimer = setTimeout(() => { devClicks = 0; }, 1500);
+
+  if(devClicks >= 5){
+    devUnlocked = true;
+    showToast("¡Felicidades! Ahora sos desarrollador de tu propia vida 🎉");
+    
+    // Agrega la app secreta al menú
+    const appsContainer = document.getElementById("appsContainer");
+    const secretApp = document.createElement("button");
+    secretApp.className = "app";
+    secretApp.onclick = () => openModal('secreto');
+    secretApp.innerHTML = `<div class="icon" style="background:#9be15d44">🕵️‍♂️</div><span>Secreto</span>`;
+    appsContainer.appendChild(secretApp);
+  }
+}
+
+function showToast(text){
+  const toast = document.getElementById("toast");
+  toast.textContent = text;
+  toast.style.display = "block";
+  setTimeout(() => { toast.style.display = "none"; }, 3500);
 }
 </script>
 </body>
