@@ -223,11 +223,11 @@
       <div class="heart">❤️</div>
       <h2>Actualización completada</h2>
       <p>
-        Gracias por todos los momentos compartidos.<br>
-        Que esta nueva versión venga con muchas más historias,
-        viajes, risas y decisiones cuestionables.
+        Que esta nueva "versión" venga cargada de hermosos momentos, risas y asaditos juntos.<br>
+        Que esté llena de nuevas oportunidades y que tus sueños y deseos más profundos se cumplan.<br><br>
+        ¡Pero sobre todo, que esté rodeada de buena gente que te acompañe siempre!
       </p>
-      <strong>¡Feliz cumpleaños!</strong>
+      <strong>¡Feliz cumple Agus!</strong>
       <div class="tiny">Android 30 - Versión estable (más o menos)</div>
     </div>
   </section>
@@ -237,7 +237,7 @@
 </div>
 
 <script>
-const DURATION_SECONDS = 36;
+const DURATION_SECONDS = 1;
 
 const messages = [
   [0, "Actualizando a Android 30..."],
@@ -317,27 +317,32 @@ const content = {
     
     <div class="memory">
       <img src="img/pic1.jpeg" alt="Montaña" onclick="zoomPhoto(this.src)">
-      <b>Escape a la montaña</b><small>Mendoza / Cordillera — Archivo procesado correctamente.</small>
+      <b></b><small>Cumple montañes</small>
     </div>
     
     <div class="memory">
       <img src="img/pic2.jpeg" alt="Asado" onclick="zoomPhoto(this.src)">
-      <b>Fernet & Asado en la mesa</b><small>Estado: sesión de sobremesa extendida.</small>
+      <b></b><small>Seriedad por favor</small>
     </div>
 
     <div class="memory">
       <img src="img/pic3.jpeg" alt="Río" onclick="zoomPhoto(this.src)">
-      <b>Tarde de río con vaso viajero</b><small>Métricas: hidratación y naturaleza al 100%.</small>
+      <b></b><small>Río e hidratación</small>
     </div>
 
     <div class="memory">
       <img src="img/pic4.jpeg" alt="Cena" onclick="zoomPhoto(this.src)">
-      <b>Reunión en el bar</b><small>Sincronización de grupo en curso...</small>
+      <b></b><small>En algun bar</small>
     </div>
 
     <div class="memory">
       <img src="img/pic5.jpeg" alt="Salida nocturna" onclick="zoomPhoto(this.src)">
-      <b>Noche de helado y risas</b><small>Registro de momentos no borrables.</small>
+      <b></b><small>Cordoba de Covid</small>
+    </div>
+
+     <div class="memory">
+      <img src="img/pic6.jpeg" alt="Hielitos" onclick="zoomPhoto(this.src)">
+      <b></b><small>La maleducada</small>
     </div>
   `,
   logros: `
@@ -365,7 +370,7 @@ const content = {
     <h2>⚙️ Información del dispositivo</h2><p class="intro">Especificaciones de Android 30.</p>
     <div class="item"><b>Batería:</b> 60%<div class="battery"><div></div></div></div>
     <div class="item"><b>Estado:</b> <span class="warn">Dudoso</span></div>
-    <div class="item"><b>Ganas de asado:</b> siempre</div>
+    <div class="item"><b>Ganas de juntada:</b> siempre</div>
     <div class="item"><b>Próxima actualización:</b> 20/09/2027</div>
     <div class="item" onclick="handleDevClick()" style="cursor:pointer"><b>Versión:</b> 30 - estable (más o menos)</div>
   `,
@@ -415,7 +420,7 @@ function handleDevClick(){
 
   if(devClicks >= 5){
     devUnlocked = true;
-    showToast("¡Felicidades! Ahora sos desarrollador de tu propia vida 🎉");
+    showToast("¡Felicidades! Encontraste los datos secretos 🎉");
     
     // Agrega la app secreta al menú
     const appsContainer = document.getElementById("appsContainer");
